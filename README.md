@@ -48,21 +48,35 @@ requirements.txt
 
 ## Sample Output
 
-Investment Analysis for $10,000.00
+### Investment Analysis for $10,000.00
 
-### Projected Scenarios (1 Year):
+### Historical Scenarios:
 Conservative: $9,871.93
 
-Expected: $10,009.81
+Expected: $10,009.85
 
-Optimistic: $10,133.01
+Optimistic: $10,133.27
+
+### Projected Future Scenarios (1 Year):
+
+Conservative: $8,684.21
+
+Expected: $11,367.24
+
+Optimistic: $15,640.39
 
 ### Risk Assessment:
+
 Maximum Historical Loss: $-1,849.19
 
-95% Value at Risk: $-402.99
+95% Value at Risk: $-402.97
 
-Annual Volatility: 43.67%
+Annual Volatility: 43.66%
+
+Interpretation:
+- There is a 95% chance that you won't lose more than $402.97 in a day
+- The worst historical daily loss would have been $1,849.19
+- Expected annual volatility is 43.66%
 
 ## Dependencies
 - pandas
