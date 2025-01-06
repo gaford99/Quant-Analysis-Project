@@ -116,6 +116,3 @@ if __name__ == "__main__":
         print(f"- Expected annual volatility is {risk_metrics['Annual_Volatility']*100:.2f}%")
     else:
         print("Error occurred during calculations")
-        print(f"- Expected annual volatility is {risk_metrics['Annual_Volatility']*100:.2f}%")
-    else:
-        print("Error occurred during calculations")
