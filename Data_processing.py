@@ -170,3 +170,6 @@ if __name__ == "__main__":
     print("\nStrategy Performance Metrics:")
     print(f"Total Returns: {processed_data['Strategy_Returns'].sum()*100:.2f}%")
     print(f"Sharpe Ratio: {processed_data['Strategy_Returns'].mean()/processed_data['Strategy_Returns'].std()*np.sqrt(252):.2f}")
+    print("\nStrategy Performance Metrics:")
+    print(f"Total Returns: {processed_data['Strategy_Returns'].sum()*100:.2f}%")
+    print(f"Sharpe Ratio: {processed_data['Strategy_Returns'].mean()/processed_data['Strategy_Returns'].std()*np.sqrt(252):.2f}")
