@@ -46,7 +46,38 @@ def calculate_risk_metrics(df, investment_amount):
         print(f"Error calculating risk metrics: {e}")
         return None
 
-# Main execution
+def project_future_scenarios(df, investment_amount, days=252):
+    """Project future scenarios using Monte Carlo simulation"""
+    try:
+        returns = df['returns'].dropna()
+        daily_return = returns.mean()
+        daily_vol = returns.std()
+        
+        # Run simulations
+        n_simulations = 1000
+        simulated_returns = np.random.normal(
+            daily_return, 
+            daily_vol, 
+            size=(n_simulations, days)
+        )
+        
+        # Calculate future values
+        future_values = investment_amount * np.cumprod(1 + simulated_returns, axis=1)
+        final_values = future_values[:, -1]
+        
+        # Calculate projected scenarios
+        projected_scenarios = {
+            'Conservative': np.percentile(final_values, 25),
+            'Expected': np.percentile(final_values, 50),
+            'Optimistic': np.percentile(final_values, 75)
+        }
+        
+        return projected_scenarios
+    except Exception as e:
+        print(f"Error in projections: {e}")
+        return None
+
+# Modify main execution
 if __name__ == "__main__":
     investment = 10000
     
@@ -57,26 +88,34 @@ if __name__ == "__main__":
     processed_data = create_features(tsm)
     
     print("Calculating scenarios...")
-    scenarios = calculate_investment_scenarios(processed_data, investment)
+    historical_scenarios = calculate_investment_scenarios(processed_data, investment)
     risk_metrics = calculate_risk_metrics(processed_data, investment)
+    future_scenarios = project_future_scenarios(processed_data, investment)
     
-    if scenarios and risk_metrics:
+    if historical_scenarios and risk_metrics and future_scenarios:
         print(f"\nInvestment Analysis for ${investment:,.2f}")
         
-        print("\nProjected Scenarios (1 Year):")
-        print(f"Conservative: ${scenarios['Conservative']:,.2f}")
-        print(f"Expected: ${scenarios['Expected']:,.2f}")
-        print(f"Optimistic: ${scenarios['Optimistic']:,.2f}")
+        print("\nHistorical Scenarios:")
+        print(f"Conservative: ${historical_scenarios['Conservative']:,.2f}")
+        print(f"Expected: ${historical_scenarios['Expected']:,.2f}")
+        print(f"Optimistic: ${historical_scenarios['Optimistic']:,.2f}")
+        
+        print("\nProjected Future Scenarios (1 Year):")
+        print(f"Conservative: ${future_scenarios['Conservative']:,.2f}")
+        print(f"Expected: ${future_scenarios['Expected']:,.2f}")
+        print(f"Optimistic: ${future_scenarios['Optimistic']:,.2f}")
         
         print("\nRisk Assessment:")
         print(f"Maximum Historical Loss: ${risk_metrics['Maximum_Historical_Loss']:,.2f}")
         print(f"95% Value at Risk: ${risk_metrics['Value_at_Risk_95']:,.2f}")
         print(f"Annual Volatility: {risk_metrics['Annual_Volatility']*100:.2f}%")
         
-        # Add interpretation
         print("\nInterpretation:")
         print(f"- There is a 95% chance that you won't lose more than ${abs(risk_metrics['Value_at_Risk_95']):,.2f} in a day")
         print(f"- The worst historical daily loss would have been ${abs(risk_metrics['Maximum_Historical_Loss']):,.2f}")
+        print(f"- Expected annual volatility is {risk_metrics['Annual_Volatility']*100:.2f}%")
+    else:
+        print("Error occurred during calculations")
         print(f"- Expected annual volatility is {risk_metrics['Annual_Volatility']*100:.2f}%")
     else:
         print("Error occurred during calculations")
